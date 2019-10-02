@@ -48,5 +48,65 @@ pivot_wider(
   names_from = time,
   values_from = mean
 )
+#most useful for presentation of results; sometimes if need to compare difference of values
 ```
+
+## Binding rows
+```{r}
+fellowship_data = 
+  readxl::read_excel("./data/LotR_Words.xlsx", range = "B3:D6") %>%
+  mutate(movie = "fellowship_ring")
+
+two_towers = 
+  readxl::read_excel("./data/LotR_Words.xlsx", range = "F3:H6") %>%
+  mutate(movie = "two_towers")
+
+return_king = 
+  readxl::read_excel("./data/LotR_Words.xlsx", range = "J3:L6") %>%
+  mutate(movie = "return_king")
+
+lotr_data = 
+  bind_rows(fellowship_data, two_towers, return_king) %>% 
+  janitor::clean_names() %>% 
+  pivot_longer(
+    female:male,
+    names_to = "sex",
+    values_to = "words"
+  ) %>% 
+  select(movie,race,sex, words)
+
+lotr_data
+```
+
+## Join datasets
+```{r}
+pup_data = 
+  read_csv("./data/FAS_pups.csv", col_types = "ciiiii") %>%
+  janitor::clean_names() %>%
+  mutate(sex = recode(sex, `1` = "male", `2` = "female")) 
+
+litter_data = 
+  read_csv("./data/FAS_litters.csv", col_types = "ccddiiii") %>%
+  janitor::clean_names() %>%
+  select(-pups_survive) %>%
+  mutate(
+    wt_gain = gd18_weight - gd0_weight,
+    group = str_to_lower(group))
+```
+
+try to join these datasets
+```{r}
+fas_data = 
+  left_join(pup_data, litter_data, by = "litter_number")
+#can also specify joining by multiple variables if needed; and if differently named columns then can use a named vector; i.e. by = c("a"="b")
+
+fas_data = 
+  left_join(pup_data, litter_data)
+
+full_join(pup_data, litter_data, by = "litter_number") %>% 
+  filter(is.na(sex))
+            
+fas_data
+```
+
 
