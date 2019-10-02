@@ -1,0 +1,69 @@
+---
+title: "Data Wrangling I"
+output: github_document
+---
+
+library(tidyverse)
+
+litters_data = read_csv(file = "./data/FAS_litters.csv")
+
+names(litters_data)
+litters_data = janitor::clean_names(litters_data)
+names(litters_data)
+
+pups = read_csv(file = "./data/FAS_pups.csv")
+
+litters_data
+tail(litters_data, 5)
+
+skimr::skim(litters_data)
+litters_data = read_csv(file = "./data/FAS_litters.csv",
+  skip = 10, col_names = FALSE)
+head(litters_data)
+
+litters_data = read_csv(file = "./data/FAS_litters.csv",
+  col_types = cols(
+    Group = col_character(),
+    `Litter Number` = col_character(),
+    `GD0 weight` = col_double(),
+    `GD18 weight` = col_double(),
+    `GD of Birth` = col_integer(),
+    `Pups born alive` = col_integer(),
+    `Pups dead @ birth` = col_integer(),
+    `Pups survive` = col_integer()
+  )
+)
+tail(litters_data)
+
+litters_data = read_csv(file = "./data/FAS_litters.csv",
+  col_types = "ccddiiii"
+)
+litters_data
+
+pups_data = read_csv(file = "./data/FAS_pups.csv",
+  col_types = "ciiiii"
+)
+pups_data
+
+#The read_excel function in this package has many of the same arguments as read_csv, including col_names, na, skip, and col_types, and can be used in basically the same way. There is also a sheet option (useful when there are multiple sheets in the Excel file) and the range option (when you want to read in a specific data rectangle). Lastly, in RStudio you can use File > Import Dataset > From Excel for a GUI interface
+library(readxl)
+mlb11_data = read_excel("data/mlb11.xlsx", n_max = 20)
+head(mlb11_data, 5)
+
+#haven, which is used to import into R data files from SAS, Stata, and SPSS
+library(haven) 
+pulse_data = read_sas("./data/public_pulse_data.sas7bdat")
+head(pulse_data, 5)
+
+pups_base = read.csv("./data/FAS_pups.csv")
+pups_readr = read_csv("./data/FAS_pups.csv")
+
+View(pups_base)
+View(pups_readr)
+
+pups_base
+pups_readr
+
+pups_base$S
+pups_readr$S
+
