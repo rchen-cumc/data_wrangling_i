@@ -59,5 +59,34 @@ filter(litters_data, pups_born_alive < 6, group == "Con7")
 filter(litters_data, group %in% c("Con7", "Mod8"))
 
 filter(litters_data, gd0_weight + gd18_weight < 70)
+
+#don't do this:
+#filter(litters_data, !is.na(gd0_weight))
+
+drop_na(litters_data, gd0_weight)
+#second parameter is optional to drop na's in a certain column, otherwise drops all rows that aren't complete
+```
+
+## Mutate
+
+```{r}
+mutate(
+  litters_data, 
+  wt_gain = gd18_weight - gd0_weight,
+  group = str_to_lower(group),
+  group = str_to_upper(group))
+
+#Use mutate to modify variables
+```
+
+## Arrange
+
+```{r}
+arrange(litters_data, pups_born_alive)
+#put in order of pups born alive
+
+arrange(litters_data, desc(pups_born_alive))
+
+arrange(litters_data, pups_born_alive, gd0_weight)
 ```
 
